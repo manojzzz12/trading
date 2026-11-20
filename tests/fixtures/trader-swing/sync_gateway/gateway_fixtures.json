@@ -1,0 +1,167 @@
+{
+  "description": "Deterministic mock integration fixtures for Phase 7.2.4 Dual-Source Real-Time Synchronization Gateway",
+  "alpaca_completed_daily_spy": [
+    {
+      "ticker": "SPY",
+      "interval": "1d",
+      "timestamp": "2026-11-12T14:30:00Z",
+      "open": 752.10,
+      "high": 755.40,
+      "low": 750.80,
+      "close": 754.20,
+      "volume": 1420500,
+      "vwap": 753.15,
+      "trade_count": 16500,
+      "session_date": "2026-11-12",
+      "feed_classification": "IEX",
+      "is_consolidated_volume": false,
+      "source": "alpaca_iex"
+    },
+    {
+      "ticker": "SPY",
+      "interval": "1d",
+      "timestamp": "2026-11-13T14:30:00Z",
+      "open": 754.30,
+      "high": 756.20,
+      "low": 751.50,
+      "close": 754.37,
+      "volume": 1580200,
+      "vwap": 753.95,
+      "trade_count": 17820,
+      "session_date": "2026-11-13",
+      "feed_classification": "IEX",
+      "is_consolidated_volume": false,
+      "source": "alpaca_iex"
+    },
+    {
+      "ticker": "SPY",
+      "interval": "1d",
+      "timestamp": "2026-11-16T14:30:00Z",
+      "open": 745.20,
+      "high": 747.80,
+      "low": 738.50,
+      "close": 739.96,
+      "volume": 1695400,
+      "vwap": 742.15,
+      "trade_count": 19450,
+      "session_date": "2026-11-16",
+      "feed_classification": "IEX",
+      "is_consolidated_volume": false,
+      "source": "alpaca_iex"
+    }
+  ],
+  "yahoo_consolidated_daily_spy": [
+    {
+      "ticker": "SPY",
+      "interval": "1d",
+      "timestamp": "2026-11-12T14:30:00Z",
+      "open": 752.15,
+      "high": 755.45,
+      "low": 750.75,
+      "close": 754.20,
+      "volume": 58450000,
+      "session_date": "2026-11-12",
+      "feed_classification": "SIP_CONSOLIDATED",
+      "is_consolidated_volume": true,
+      "source": "yahoo_finance"
+    },
+    {
+      "ticker": "SPY",
+      "interval": "1d",
+      "timestamp": "2026-11-13T14:30:00Z",
+      "open": 754.35,
+      "high": 756.25,
+      "low": 751.45,
+      "close": 754.37,
+      "volume": 62100000,
+      "session_date": "2026-11-13",
+      "feed_classification": "SIP_CONSOLIDATED",
+      "is_consolidated_volume": true,
+      "source": "yahoo_finance"
+    },
+    {
+      "ticker": "SPY",
+      "interval": "1d",
+      "timestamp": "2026-11-16T14:30:00Z",
+      "open": 745.15,
+      "high": 747.85,
+      "low": 738.45,
+      "close": 739.96,
+      "volume": 71800000,
+      "session_date": "2026-11-16",
+      "feed_classification": "SIP_CONSOLIDATED",
+      "is_consolidated_volume": true,
+      "source": "yahoo_finance"
+    }
+  ],
+  "yahoo_mismatched_date_spy": [
+    {
+      "ticker": "SPY",
+      "interval": "1d",
+      "timestamp": "2026-11-17T14:30:00Z",
+      "open": 745.15,
+      "high": 747.85,
+      "low": 738.45,
+      "close": 739.96,
+      "volume": 71800000,
+      "session_date": "2026-11-17",
+      "feed_classification": "SIP_CONSOLIDATED",
+      "is_consolidated_volume": true,
+      "source": "yahoo_finance"
+    }
+  ],
+  "yahoo_zero_volume_spy": [
+    {
+      "ticker": "SPY",
+      "interval": "1d",
+      "timestamp": "2026-11-16T14:30:00Z",
+      "open": 745.20,
+      "high": 747.80,
+      "low": 738.50,
+      "close": 739.96,
+      "volume": 0,
+      "session_date": "2026-11-16",
+      "feed_classification": "SIP_CONSOLIDATED",
+      "is_consolidated_volume": true,
+      "source": "yahoo_finance"
+    }
+  ],
+  "intraday_streaming_bars_spy": [
+    {
+      "T": "b",
+      "S": "SPY",
+      "o": 580.10,
+      "h": 581.50,
+      "l": 579.80,
+      "c": 580.95,
+      "v": 15400,
+      "t": "2026-11-17T15:30:00Z",
+      "n": 320,
+      "vw": 580.65
+    },
+    {
+      "T": "u",
+      "S": "SPY",
+      "o": 580.10,
+      "h": 582.10,
+      "l": 579.80,
+      "c": 581.85,
+      "v": 24200,
+      "t": "2026-11-17T15:30:00Z",
+      "n": 480,
+      "vw": 580.92
+    },
+    {
+      "T": "b",
+      "S": "SPY",
+      "o": 581.85,
+      "h": 582.40,
+      "l": 581.50,
+      "c": 582.10,
+      "v": 18300,
+      "t": "2026-11-17T15:31:00Z",
+      "n": 390,
+      "vw": 581.95
+    }
+  ]
+}

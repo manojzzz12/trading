@@ -1,0 +1,13 @@
+{
+  "ticker": "AAPL",
+  "split_ratio": 4.0,
+  "split_date": "2020-08-31",
+  "description": "FLAWED FIXTURE: Deliberately unadjusted nominal prices showing 74% price discontinuity across 4:1 split",
+  "bars": [
+    {"date": "2020-08-26", "open": "504.72", "high": "520.88", "low": "503.12", "close": "506.08", "adj_close": "124.35", "volume": 50744500, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-08-27", "open": "508.56", "high": "509.96", "low": "495.32", "close": "500.04", "adj_close": "122.87", "volume": 38888100, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-08-28", "open": "504.04", "high": "509.16", "low": "497.24", "close": "499.24", "adj_close": "122.68", "volume": 46907500, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-08-31", "open": "127.58", "high": "131.00", "low": "126.00", "close": "129.04", "adj_close": "126.83", "volume": 225702700, "splits": 4.0, "dividends": 0.0},
+    {"date": "2020-09-01", "open": "132.76", "high": "134.80", "low": "130.53", "close": "134.18", "adj_close": "131.88", "volume": 151948100, "splits": 0.0, "dividends": 0.0}
+  ]
+}

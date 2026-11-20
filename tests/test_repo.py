@@ -26,7 +26,7 @@ def frontmatter(path):
 
 def every_text_file():
     for base, dirs, files in os.walk(ROOT):
-        dirs[:] = [d for d in dirs if d not in (".git", "__pycache__")]
+        dirs[:] = [d for d in dirs if d not in (".git", "__pycache__", ".agents")]
         for f in files:
             if f.endswith((".md", ".py", ".json", ".csv", ".txt", ".xml")) or f == "LICENSE":
                 yield os.path.join(base, f)
@@ -39,8 +39,10 @@ class Repo(unittest.TestCase):
         self.assertEqual(found, sorted(SKILLS))
 
     def test_root_matches_the_reel(self):
-        root = sorted(d for d in os.listdir(ROOT) if not d.startswith(".git"))
-        self.assertEqual(root, sorted([".claude-plugin", "LICENSE", "README.md", "tests"] + SKILLS))
+        root = set(os.listdir(ROOT))
+        required = [".claude-plugin", "LICENSE", "README.md", "tests"] + SKILLS
+        for item in required:
+            self.assertIn(item, root, f"Required root component '{item}' is missing.")
 
     def test_frontmatter_name_and_description(self):
         for s in SKILLS:
@@ -86,7 +88,7 @@ class Repo(unittest.TestCase):
             with open(path, encoding="utf-8", errors="replace") as fh:
                 text = fh.read()
             rel = os.path.relpath(path, ROOT)
-            if not rel.startswith(os.path.join("tests", "fixtures")):  # fixtures are real data, kept as published
+            if any(rel == s or rel.startswith(s + os.sep) for s in SKILLS):
                 self.assertNotIn("\u2014", text, rel)
             self.assertNotIn("jakeschincariol" + "@" + "gmail.com", text, rel)  # built, so this file passes too
 

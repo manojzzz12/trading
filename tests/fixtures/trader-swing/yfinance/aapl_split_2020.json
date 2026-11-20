@@ -1,0 +1,18 @@
+{
+  "ticker": "AAPL",
+  "split_ratio": 4.0,
+  "split_date": "2020-08-31",
+  "description": "Historical split-adjusted daily OHLCV across AAPL 4-for-1 stock split on 2020-08-31",
+  "bars": [
+    {"date": "2020-08-24", "open": "128.70", "high": "131.00", "low": "125.00", "close": "125.86", "adj_close": "123.71", "volume": 345937600, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-08-25", "open": "124.70", "high": "125.18", "low": "123.05", "close": "124.82", "adj_close": "122.69", "volume": 211495600, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-08-26", "open": "126.18", "high": "130.22", "low": "125.78", "close": "126.52", "adj_close": "124.35", "volume": 202978000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-08-27", "open": "127.14", "high": "127.49", "low": "123.83", "close": "125.01", "adj_close": "122.87", "volume": 155552400, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-08-28", "open": "126.01", "high": "127.29", "low": "124.31", "close": "124.81", "adj_close": "122.68", "volume": 187630000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-08-31", "open": "127.58", "high": "131.00", "low": "126.00", "close": "129.04", "adj_close": "126.83", "volume": 225702700, "splits": 4.0, "dividends": 0.0},
+    {"date": "2020-09-01", "open": "132.76", "high": "134.80", "low": "130.53", "close": "134.18", "adj_close": "131.88", "volume": 151948100, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-09-02", "open": "137.59", "high": "137.98", "low": "127.00", "close": "131.40", "adj_close": "129.15", "volume": 200119000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-09-03", "open": "126.91", "high": "128.84", "low": "120.72", "close": "120.88", "adj_close": "118.81", "volume": 257599600, "splits": 0.0, "dividends": 0.0},
+    {"date": "2020-09-04", "open": "120.07", "high": "123.70", "low": "110.89", "close": "120.96", "adj_close": "118.89", "volume": 332607200, "splits": 0.0, "dividends": 0.0}
+  ]
+}

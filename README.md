@@ -1,27 +1,218 @@
-# The Day Trader skill
+# The Day Trader skill & Trader-Swing Platform
 
 11 Claude skills for day trading: scan thousands of charts, track breaking news, time every entry and exit, and replay every outcome before you risk a dollar.
 
-Free, MIT, no signup, no API key. The tools are plain Python that read free
-public data: Yahoo Finance charts, Nasdaq Trader's symbol lists, SEC EDGAR
-and the House Clerk.
+**Trader-Swing** is an advanced quantitative research and simulated paper-trading platform for US equities. It builds directly upon the modular foundation of the 11 Claude day-trading skills originally developed in the [day-trader-skill](https://github.com/Jakeschincariol/day-trader-skill) project, extending them into a full-featured, offline-reproducible swing trading research, observation, and paper broker simulation system.
 
-One scans thousands of charts for setups. Another tracks breaking news on
-every stock you watch. One watches a setup bar by bar and tells you the moment
-to get in, and another sets your stop and your target before you do. And the
-craziest one is the Time Machine: before you risk a dollar, it replays the
-rest of the session 10,000 times from the stock's own recent bars, plus every
-past day the same setup fired, and tells you the honest odds.
+> **CRITICAL DISCLAIMER**: Trader-Swing is strictly a research and simulated paper-trading system. It does NOT place live orders or trade with real money. All broker executions run within an isolated in-memory or sandboxed double-entry paper ledger.
 
-And no trade goes through until you say yes. Nothing in this pack can place
-an order on its own. Paper trading is the default.
+---
 
-> **Looking for the original Trader skill?** Copy an investor's 13F, the
-> stock screener, tax lots and rebalancing live in
-> [github.com/Jakeschincariol/trader-skill](https://github.com/Jakeschincariol/trader-skill).
-> This repo is its day-trading sequel: the Trader skill v2.
+## Architecture Overview
 
-## Install
+```mermaid
+flowchart TD
+    subgraph Ingestion ["1. Market Data Ingestion"]
+        Yahoo["Yahoo Finance Tape<br/>(Consolidated Volume)"]
+        Alpaca["Alpaca Markets Feed<br/>(Real-Time Prices)"]
+        Aggregator["DualSourceAggregator<br/>Anti-Volume Substitution Guard"]
+        Yahoo --> Aggregator
+        Alpaca --> Aggregator
+    end
+
+    subgraph Analysis ["2. Technical Screening & Gateway"]
+        MDG["MarketDataGateway<br/>Forming vs Completed Candle Segregation"]
+        Screener["5-Pillar Screener<br/>Trend, Momentum, Volume, Volatility, Catalyst"]
+        Aggregator --> MDG
+        MDG --> Screener
+    end
+
+    subgraph Auth ["3. Multi-Gate Human Authorization"]
+        Gate1["Gate 1: Schema & Sanity Check"]
+        Gate2["Gate 2: HMAC-SHA256 Token (300s TTL)"]
+        Gate3["Gate 3: Pre-Trade Risk Checks (2% Max Risk)"]
+        Screener --> Gate1
+        Gate1 --> Gate2
+        Gate2 --> Gate3
+    end
+
+    subgraph PaperEngine ["4. Paper Broker Simulation Engine"]
+        PaperBroker["PaperBrokerSimulator<br/>Thread-Safe Atomic Execution Lock"]
+        CashReserve["Cash Reservation Subsystem<br/>Locks Cash for Open Buy Limits"]
+        Ledger["Double-Entry Accounting Ledger<br/>Cash + Positions = Equity"]
+        Gate3 --> CashReserve
+        CashReserve --> PaperBroker
+        PaperBroker --> Ledger
+    end
+
+    subgraph UI ["5. Research Dashboard & Analytics"]
+        Eval["Forward Evaluation Engine<br/>Wilson Score, Sample Size Honesty"]
+        Dashboard["Streamlit Research Dashboard<br/>Terminal, Screener, Portfolio, Audit"]
+        Ledger --> Eval
+        Ledger --> Dashboard
+        MDG --> Dashboard
+    end
+```
+
+---
+
+## Repository Structure: Two Distinct Layers
+
+This project organizes quantitative trading functionality into two distinct layers:
+
+1. **Interactive Modular Day-Trading Skills (`trader-*/`)**:
+   Located directly at the repository root (`trader-scanner/`, `trader-entry/`, `trader-exit/`, `trader-timemachine/`, `trader-risk/`, `trader-budget/`, `trader-broker/`, `trader-alerts/`, `trader-analyst/`, `trader-news/`, `trader-pelosi/`). These are focused, standalone CLI tools and Claude skills for intraday setups, news tracking, Monte Carlo replays, and individual trade planning.
+2. **Automated Swing Trading Subsystem (`.agents/skills/trader-swing/`)**:
+   The core programmatic engine of Trader-Swing. Houses the dual-source market data aggregator, real-time `MarketDataGateway`, double-entry accounting ledger with cash reservation, 3-gate HMAC order authorization service, and forward evaluation analytics.
+
+---
+
+## Key Features
+
+1. **Dual-Source Market Data Protection**: Real-time prices from Alpaca with Average Daily Volume (ADV) and Relative Volume (RVOL) exclusively from consolidated US market volume (Yahoo Finance). Exchange-specific volume is never substituted for the consolidated tape.
+2. **Forming vs Completed Candle Segregation**: Eliminates lookahead bias by ensuring technical indicators compute exclusively over completed daily sessions, while live forming candles are isolated.
+3. **Three-Gate Human Authorization**: Automated orders cannot bypass human approval. Orders require a cryptographically signed HMAC-SHA256 token with a strict 300-second TTL and single-use replay protection.
+4. **Double-Entry Paper Accounting & Cash Reservation**: Open buy limit orders immediately lock cash in `reserved_cash_usd`, preventing synthetic margin violations or overdrafts.
+5. **Statistical Honesty & Forward Evaluation**: Wilson score confidence intervals and automated sample size warnings (`SAMPLE INSUFFICIENT` for sample sizes under 30 trades).
+6. **Read-Only Streamlit Research Dashboard**: A locally hosted terminal for deep-dive technical charts, market screener breadth, portfolio curves, and observation logs.
+7. **Original 11 Modular Skills**: 11 focused day-trading skills that can be run as CLI tools or Claude skills.
+
+---
+
+## Prerequisites & Platform Support
+
+- **Primary Supported Platform**: **Windows 10/11** using **Windows PowerShell** (PowerShell 5.1 or PowerShell 7+). Automated onboarding scripts (`setup.ps1`) and task runners (`run.ps1`) are built and tested specifically for Windows PowerShell.
+- **Python Version**: Python >= 3.11, <= 3.13 (Python 3.13 recommended).
+- **Git**: For cloning and repository management.
+- **Linux / macOS Support**: The core Python codebase uses standard cross-platform libraries and can be run on Unix systems via manual virtual environment configuration (see Unix section below).
+
+---
+
+## Windows Quick Start
+
+### 1. Enable Script Execution & Clone Repository
+In your PowerShell terminal, allow script execution for the current session:
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+git clone https://github.com/manojzzz12/trading.git
+cd trading
+```
+
+### 2. Run Automated Setup
+Run the setup script to create the virtual environment (`.venv`), install dependencies, and generate your `.env` configuration:
+```powershell
+.\setup.ps1
+```
+
+### 3. (Optional) Ingest Baseline Market Data
+Market data CSVs are excluded from Git to keep the repository lightweight. The dashboard handles missing market data gracefully with clean default empty states. If you wish to populate baseline market data for the 50-stock curated universe, run:
+```powershell
+.\.venv\Scripts\python.exe scripts/acquire_current_daily.py
+```
+
+### 4. Launch the Research Dashboard
+```powershell
+.\run.ps1 dashboard
+```
+Open your web browser to `http://localhost:8501`.
+
+---
+
+## Linux / macOS Manual Setup
+
+While Windows PowerShell is the primary supported automation environment, Unix developers can run Trader-Swing using standard Python virtual environment tooling:
+
+```bash
+# 1. Create and activate virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Initialize configuration
+cp .env.example .env
+# Edit .env and set TRADER_AUTH_SECRET to a 32-character hex key:
+python3 -c "import secrets; print(secrets.token_hex(16))"
+
+# 4. Launch Streamlit dashboard
+streamlit run dashboard/app.py
+```
+
+---
+
+## Runner Commands (`run.ps1`)
+
+The `run.ps1` script provides simple, one-line commands for all platform functions on Windows:
+
+```powershell
+# Launch the Streamlit research dashboard (http://localhost:8501)
+.\run.ps1 dashboard
+
+# Run the forward paper trading evaluation performance report
+.\run.ps1 eval
+
+# View historical forward evaluation summaries
+.\run.ps1 summary
+
+# Run automated forward evaluation batch for the latest session
+.\run.ps1 batch
+
+# Run the automated test suite (1,186+ tests, ~2.5 minutes)
+.\run.ps1 test
+
+# Run the daily pre-market chart scanner
+.\run.ps1 scan
+
+# Show help menu
+.\run.ps1 help
+```
+
+---
+
+## Environment & Configuration
+
+Copy `.env.example` to `.env` (handled automatically by `setup.ps1` on Windows):
+```powershell
+Copy-Item .env.example .env
+```
+
+Key variables configured in `.env`:
+- `TRADER_AUTH_SECRET`: Mandatory 16+ byte cryptographically secure secret for signing HMAC order authorization tokens.
+- `ALPACA_API_BASE_URL`: Defaults to `https://paper-api.alpaca.markets` (Paper trading only).
+- `ALPACA_API_KEY_ID` & `ALPACA_API_SECRET_KEY`: Optional Alpaca keys for real-time market data streaming.
+- `SEC_USER_AGENT`: User-Agent header for SEC EDGAR filing requests (e.g. `ResearchApp User<user@example.com>`).
+
+### Personal Paper Journal Storage Location
+To ensure that personal financial records are never accidentally committed to source control, Trader-Swing isolates paper journals outside the repository tree:
+- **Default Paper State Location**: `Path.home() / "Documents" / "TradingPaperState"` (`C:\Users\<username>\Documents\TradingPaperState` on Windows).
+  - Override via: `TRADING_PAPER_STATE_DIR` environment variable.
+- **Default Simulation State Location**: `Path.home() / "Documents" / "TradingPaperSimulation"`.
+  - Override via: `TRADING_PAPER_SIMULATION_DIR` environment variable.
+
+For detailed configuration documentation, see [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
+
+---
+
+## The Eleven Original Skills
+
+| Command | Skill Name | Purpose |
+| :--- | :--- | :--- |
+| `/trader-scanner` | Chart Scanner | Scans thousands of charts for opening-range breakouts, flags, and bounces. |
+| `/trader-news` | News Monitor | Tracks breaking news and SEC 8-K filings on watchlist tickers. |
+| `/trader-entry` | Entry Timer | Watches setups bar by bar and alerts the moment an entry triggers. |
+| `/trader-exit` | Exit Planner | Sets deterministic stop-loss and take-profit targets before entry. |
+| `/trader-timemachine` | Time Machine | Replays trade outcomes 10,000 times using historical 5-minute bars. |
+| `/trader-risk` | Risk Manager | Evaluates trades against account risk limits (max loss, position caps). |
+| `/trader-budget` | Budget Manager | Sizes share quantities to fit strict dollar risk budgets. |
+| `/trader-broker` | Order Executor | Builds formatted tickets for human review and paper execution. |
+| `/trader-alerts` | Price Alerts | Monitors price thresholds, stops, and closing bell flat-by times. |
+| `/trader-analyst` | Earnings Analyst | Reads 10-Q and 10-K filings straight from SEC EDGAR. |
+| `/trader-pelosi` | Pelosi Tracker | Parses public Congressional Periodic Transaction Reports (PTRs). |
+
+### Installing into Claude
+
+The 11 modular skills can be installed into Claude directly from the upstream project registry:
 
 Paste this into Claude:
 
@@ -31,186 +222,91 @@ https://github.com/Jakeschincariol/day-trader-skill
 install skill
 ```
 
-Or as a plugin, in Claude Code:
+Or as a plugin in Claude Code:
 
 ```
 /plugin marketplace add Jakeschincariol/day-trader-skill
 /plugin install day-trader-skill@day-trader-skill
 ```
 
-Claude Code namespaces plugin skills, so installed as a plugin they show up as
-`/day-trader-skill:trader-scanner` and so on. Copy the folders instead if you want
-plain `/trader-scanner`:
+---
 
-```bash
-git clone https://github.com/Jakeschincariol/day-trader-skill.git
-cp -r day-trader-skill/trader-* ~/.claude/skills/
+## Running Individual Tools (CLI)
+
+All tools run with standard-library Python or through `.venv`:
+
+```powershell
+# Chart scanner: US universe and pre-market setups
+.\.venv\Scripts\python.exe trader-scanner/scan.py daily
+
+# News monitor: Headlines and SEC 8-Ks
+.\.venv\Scripts\python.exe trader-news/news.py --tickers TSLA --hours 12
+
+# Entry timer: Watch setup
+.\.venv\Scripts\python.exe trader-entry/entry.py check TSLA --setup orb
+
+# Exit planner: Compute stop and target
+.\.venv\Scripts\python.exe trader-exit/exit.py plan --stop or-mid --target 1R
+
+# Time machine: 10,000 Monte Carlo replays
+.\.venv\Scripts\python.exe trader-timemachine/timemachine.py run
+
+# Position sizing: Size to dollar risk
+.\.venv\Scripts\python.exe trader-budget/size.py
+
+# Pre-trade risk check
+.\.venv\Scripts\python.exe trader-risk/check.py
+
+# Paper broker ticket
+.\.venv\Scripts\python.exe trader-broker/ticket.py show
+
+# SEC company facts
+.\.venv\Scripts\python.exe trader-analyst/facts.py AAPL
 ```
 
-Project-local instead of global: copy the same folders into your repo's
-`.claude/skills/`. No Claude Code at all? Paste any single `SKILL.md` at the
-top of a chat and it runs as a mode. You lose the Python tools, but the method
-works.
+---
 
-The tools need Python 3.8 or newer. Nothing to pip install. The SEC tools
-(news filings, the analyst) ask you to identify yourself: put your name and
-email in `trader/config.json` (`"sec_user_agent": "Your Name you@example.com"`)
-or in the `SEC_USER_AGENT` environment variable.
+## Testing & Quality Assurance
 
-## The eleven
+Trader-Swing includes a comprehensive test suite covering accounting invariants, HMAC token authorization, order state transitions, and broker simulation:
 
-| command | job | what it does |
-| --- | --- | --- |
-| `/trader-scanner` | Chart Scanner | Scans thousands of charts for setups: opening-range breakouts, flags, oversold bounces. |
-| `/trader-news` | News Monitor | Tracks breaking news on every stock you watch and flags what moves it. |
-| `/trader-entry` | Entry Timer | Watches a setup bar by bar and tells you the moment to get in. |
-| `/trader-exit` | Exit Planner | Sets your stop and your target before you enter, so you know when to get out. |
-| `/trader-timemachine` | Time Machine | Replays every possible outcome of a trade before you risk a dollar: 10,000 simulated sessions plus every past time the setup fired. |
-| `/trader-risk` | Risk Manager | Checks every trade against your limits and stops anything over them. |
-| `/trader-budget` | Budget Manager | Sizes every position to your budget and your max loss per trade. |
-| `/trader-broker` | Order Executor | Sends approved orders to your broker, paper trading by default, never without your yes. |
-| `/trader-alerts` | Price Alerts | Rings when a price, a stop or the opening bell hits. |
-| `/trader-analyst` | Earnings Analyst | Reads earnings reports and sums up what changed. |
-| `/trader-pelosi` | Pelosi Tracker | Reads Congress's stock-trade disclosures the minute they are filed. |
-
-## How to use it
-
-Everything lands in a `trader/` folder in your project, and each skill reads
-what the last one wrote:
-
-```
-scanner -> news -> entry -> exit -> timemachine -> budget -> risk -> broker   (one trade)
-alerts: stop, target, flat by the close                                       (while it is open)
-news / analyst / pelosi                                                        (on a schedule)
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests/ -q
 ```
 
-An example, the trade in the reel: Tesla, Monday October 19 2026, real data.
+All 1,186+ tests execute deterministically offline using sanitized fixtures, achieving a 100% pass rate (1,186 passed, 1 skipped, 0 failed).
+- **Execution Time**: The complete full test suite runs in approximately **2.5 to 3 minutes** (167 seconds).
 
-1. **`/trader-scanner`** at 10:15 AM ET: of the 231 charts in the reel's
-   scan, 42 had closed above their 15-minute opening range. TSLA is one: range 354.47 to 362.18,
-   the 10:10 candle closed at 364.18, 0.55 % over the top.
-2. **`/trader-news`**: the morning's TSLA headlines, in New York time
-   ("Tesla-SpaceX Merger Mania Strikes Wall Street Ahead of Earnings", 8:04,
-   tagged earnings and deal). Tesla reports this week: a day trade is out
-   before the close, so it is not exposed to the report.
-3. **`/trader-entry`** watched TSLA bar by bar. At 10:12 it said waiting (the
-   10:10 bar was still forming). At 10:15 it said triggered: the first
-   5-minute close above the range, 364.18.
-4. **`/trader-exit`** set the plan before the entry: stop at the range's
-   midpoint, 358.32, so 5.86 a share at risk; target one times that risk,
-   370.04; flat by 3:55 PM either way.
-5. **`/trader-timemachine`** replayed the rest of the day 10,000 times, each
-   5-minute candle drawn from TSLA's own candles at that time of day over the
-   previous 59 sessions (seed 19, so anyone can repeat it): target first
-   29.4 %, stop first 25.5 %, still open at the close 45.1 %. It also re-ran
-   the same rule on those 59 real sessions: it fired 33 times, 13 hit the
-   target, 15 the stop, 5 neither. Its verdict: close to a coin flip. That is
-   the point of looking before you risk a dollar.
-6. **`/trader-budget`** with a $5,000 account and a $50 max loss per trade:
-   50 / 5.86 = 8 shares ($2,913.44). If the stop fills at 358.32, the loss is
-   $46.88. It writes one bracket order: buy 8 TSLA, stop-loss 358.32,
-   take-profit 370.04.
-7. **`/trader-risk`** checks it against your limits: the max loss, the daily
-   loss limit, trades per day, reward to risk, the entry window, position
-   size and cash. PASS or BLOCK, with the reason.
-8. **`/trader-broker`** shows you the ticket in plain words. You type yes for
-   that exact order. Claude calls your brokerage connector (Alpaca's MCP
-   server, paper account by default), and Claude's own "Allow once / Deny"
-   card asks you one more time.
-9. **`/trader-alerts`** rings on the stop, the target and at 3:55 PM to
-   flatten whatever is still open.
+---
 
-## The tools
+## Project Documentation
 
-All standard-library Python. The data tools read public endpoints and are
-polite about it.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - Component design, data flow, and invariants.
+- [docs/CONFIGURATION.md](docs/CONFIGURATION.md) - Environment variables and risk configuration.
+- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) - Common Windows setup and runtime solutions.
+- [docs/IMPLEMENTATION_HISTORY.md](docs/IMPLEMENTATION_HISTORY.md) - Complete phase audit and milestone history.
 
-```bash
-python3 trader-scanner/scan.py universe                                # ~5,900 US stocks, Nasdaq Trader
-python3 trader-scanner/scan.py daily                                   # pre-market setups, whole universe
-python3 trader-scanner/scan.py orb --at 10:15                          # opening-range breakouts so far
-python3 trader-news/news.py --tickers TSLA --hours 12                  # headlines, 8-Ks, today's move
-python3 trader-entry/entry.py check TSLA --setup orb                   # waiting / triggered / expired
-python3 trader-entry/entry.py watch TSLA --every 30                    # bar by bar until it triggers
-python3 trader-exit/exit.py plan --stop or-mid --target 1R --write     # -> trader/plan.json
-python3 trader-timemachine/timemachine.py run --write                  # 10,000 replays + the history
-python3 trader-budget/size.py --write                                  # -> trader/orders.json
-python3 trader-risk/check.py                                           # PASS / BLOCK per order
-python3 trader-broker/ticket.py show                                   # the tickets, READY or not
-python3 trader-alerts/alerts.py add --from-plan                        # stop, target, flat by close
-python3 trader-alerts/alerts.py check                                  # rings what hit, once
-python3 trader-analyst/facts.py TSLA                                   # quarters, growth, EPS
-python3 trader-pelosi/ptr.py index --member pelosi                     # her PTRs this year
-```
+---
 
-```bash
-python3 -m unittest discover -s tests -v
-```
+## Limitations
 
-The tests run offline, on fixtures cut from real data: TSLA's 5-minute bars
-for the 60 days to October 19 2026, the 10:15 AM opening-range scan, Yahoo's
-TSLA headlines that morning, the House Clerk's 2026 index, real PTR text and
-real XBRL facts. They reproduce every number in the example above.
+- **Simulated Paper Trading Only**: This software does not place real-money orders. Broker connectors default to paper accounts.
+- **US Equities Only**: Designed for US common stocks and ETFs (SPY, QQQ, and large-cap liquid equities). No crypto, forex, options, or futures.
+- **No Intraday HFT**: The system operates on completed daily bars and 5-minute bars. It is not designed for high-frequency trading.
+- **Free Data Caveats**: Yahoo Finance endpoints are unofficial and may experience rate limits or network latency.
+
+---
 
 ## Fine print
 
-**Not financial advice.** This is software that reads public data and does
-arithmetic. It does not know your situation and it cannot see the future.
-Most people who day trade lose money. You can lose money. Decide for
-yourself, and talk to a licensed professional if you need advice.
+**Not financial advice.** This software reads public market data and computes arithmetic. It does not know your personal financial situation and cannot predict market movements. Most individuals who trade lose money. Decide for yourself and consult a licensed financial professional before risking capital.
 
-**No trade goes through until you say yes.** Only `/trader-broker` can lead to
-an order, and only after `/trader-risk` passes that exact order and you type
-yes for it in the chat. Set your brokerage tool to "Needs approval" in Claude
-(Customize, Connectors, tool permissions), never "Always allow", so Claude's
-own "Allow once / Deny" card is a second check. No options, margin, short
-selling or leverage unless you turn them on.
+**Human authorization required.** Automated orders cannot execute without human review. Every order must pass schema checks, risk limits, and an HMAC approval token before reaching the paper simulation engine.
 
-**Paper first.** `"paper": true` is the default in `config.example.json`, and
-Alpaca's MCP server defaults to its paper account. Keys live in environment
-variables, never in the chat.
+**Simulation is not prediction.** The Time Machine and paper broker simulate hypothetical scenarios based on historical bars. Future market conditions can differ substantially from past observations.
 
-**The Time Machine is a simulation, not a prediction.** It is built from the
-stock's own last 60 days of 5-minute bars. The future can do things those 60
-days never did: an earnings report, a halt, a headline. Treat its odds as a
-reality check, never as a promise.
+---
 
-**A stop is a plan, not a guarantee.** In a fast market or across a gap, a
-stop order can fill well past its price. The max loss shown is the loss at
-the stop price.
+## License
 
-**The data is free and unofficial.** Yahoo Finance's chart endpoint is not an
-official API: it can lag, change or rate-limit you. The scanner and the entry
-timer read 1-minute or 5-minute bars, not every tick. Check anything that
-matters against your broker before you act on it.
-
-**Day-trading rules.** FINRA removed the $25,000 pattern-day-trader minimum
-on June 4, 2026 (Regulatory Notice 26-10), and brokers may phase the change
-in until October 20, 2027, so yours may still apply the old rule. If it does,
-set `"pdt_guard": true` and `/trader-risk` counts your day trades.
-
-**Congress's trades are public, not inside information.** Members must disclose
-trades over $1,000 within 45 days (the STOCK Act). The Pelosi skill reads those
-public filings the minute they post.
-
-**Taxes.** Day-trading gains are short-term gains, and frequent trading makes
-wash sales likely. Nothing here is tax advice.
-
-## Files
-
-```
-trader-scanner/     SKILL.md, scan.py
-trader-news/        SKILL.md, news.py
-trader-entry/       SKILL.md, entry.py
-trader-exit/        SKILL.md, exit.py
-trader-timemachine/ SKILL.md, timemachine.py
-trader-risk/        SKILL.md, check.py
-trader-budget/      SKILL.md, size.py, config.example.json, targets.example.json
-trader-broker/      SKILL.md, ticket.py, claude_desktop_config.example.json
-trader-alerts/      SKILL.md, alerts.py, alerts.example.json
-trader-analyst/     SKILL.md, facts.py, metrics.example.json
-trader-pelosi/      SKILL.md, ptr.py
-tests/              unittest suite + offline fixtures
-```
-
-MIT. Made by [Jake Schincariol](https://opusjake.ai).
+MIT License. See [LICENSE](LICENSE) for details.

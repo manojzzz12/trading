@@ -1,0 +1,18 @@
+{
+  "ticker": "NVDA",
+  "split_ratio": 10.0,
+  "split_date": "2024-06-10",
+  "description": "Historical split-adjusted daily OHLCV across NVDA 10-for-1 stock split on 2024-06-10",
+  "bars": [
+    {"date": "2024-06-03", "open": "113.62", "high": "115.00", "low": "112.00", "close": "115.00", "adj_close": "114.99", "volume": 438390000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2024-06-04", "open": "115.72", "high": "116.60", "low": "114.00", "close": "116.44", "adj_close": "116.43", "volume": 461030000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2024-06-05", "open": "118.37", "high": "122.45", "low": "117.47", "close": "122.44", "adj_close": "122.43", "volume": 528400000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2024-06-06", "open": "124.05", "high": "125.59", "low": "118.32", "close": "121.00", "adj_close": "120.99", "volume": 664550000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2024-06-07", "open": "119.77", "high": "121.69", "low": "118.02", "close": "120.89", "adj_close": "120.88", "volume": 524180000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2024-06-10", "open": "120.37", "high": "123.10", "low": "117.41", "close": "121.79", "adj_close": "121.78", "volume": 523420000, "splits": 10.0, "dividends": 0.0},
+    {"date": "2024-06-11", "open": "121.22", "high": "122.29", "low": "118.61", "close": "120.91", "adj_close": "120.90", "volume": 444530000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2024-06-12", "open": "123.06", "high": "126.88", "low": "122.57", "close": "125.20", "adj_close": "125.19", "volume": 547620000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2024-06-13", "open": "129.39", "high": "129.80", "low": "127.16", "close": "129.61", "adj_close": "129.60", "volume": 507800000, "splits": 0.0, "dividends": 0.0},
+    {"date": "2024-06-14", "open": "129.96", "high": "132.84", "low": "128.32", "close": "131.88", "adj_close": "131.87", "volume": 678390000, "splits": 0.0, "dividends": 0.0}
+  ]
+}

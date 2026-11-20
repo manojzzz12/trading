@@ -1,0 +1,61 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches and tooling
+.pytest_cache/
+.qodo/
+.ruff_cache/
+.mypy_cache/
+
+# Databases and local caches
+*.db
+*.sqlite
+*.sqlite3
+
+# Environments
+.env
+.env.*
+!.env.example
+.venv/
+env/
+venv/
+ENV/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Sensitive configuration & local keys
+.agents/mcp_config.json
+.secrets/
+*.key
+*.token
+*.lock
+*.log
+
+# Protected personal paper trading state & logs
+paper_journal.json
+/AAPL_daily.csv
+.planning/data/observations/observation_log.jsonl
+
+# Market datasets
+.planning/data/current_daily/
+.planning/data/historical_partitions/
+
+# Root-level phase reports (consolidated in docs/IMPLEMENTATION_HISTORY.md)
+/PHASE_*.md
+
+# Disposable test/documentation image artifacts
+dashboard/screenshots/*.png
+.planning/screenshots/*.png
+
+# Local forward evaluation outputs (preserve directory structure via MARKER)
+.planning/data/forward_evaluation/audit/*.jsonl
+.planning/data/forward_evaluation/observations/*.json
+.planning/data/forward_evaluation/positions/*.json
+.planning/data/forward_evaluation/proposals/*.json
+.planning/data/forward_evaluation/summaries/*.json
+.planning/data/forward_evaluation/trades/*.json

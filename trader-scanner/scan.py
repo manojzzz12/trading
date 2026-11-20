@@ -233,11 +233,16 @@ def http_get(url, timeout=20):
 
 
 def yahoo_get(path):
-    """GET a Yahoo Finance path. query2 first, query1 on a 429 or 5xx, and one
-    more round after BACKOFF seconds if a 429 was seen. 4xx other than 429 is final."""
+    """GET a Yahoo Finance path. query2 first, query1 on a 429 or 5xx (including 503),
+    and one more round after BACKOFF seconds if a retryable error was seen.
+    4xx other than 429 is final.
+
+    Handles: 429 (rate limit), 500, 502, 503, 504 (server errors)
+    Does NOT retry: 400, 401, 403, 404, other 4xx (client errors)
+    """
     last = "no answer"
     for attempt in (0, 1):
-        saw_429 = False
+        saw_retryable = False
         for host in YAHOO_HOSTS:
             try:
                 return http_get(host + path)
@@ -249,18 +254,19 @@ def yahoo_get(path):
                     body = ""
                 finally:
                     e.close()
-                if e.code == 429:
-                    saw_429 = True
+                # Retryable: 429 (rate limit) or 5xx (server errors including 503)
+                if e.code == 429 or e.code >= 500:
+                    saw_retryable = True
                     continue
-                if e.code >= 500:
-                    continue
+                # Non-retryable 4xx: final
                 if body.strip().startswith("{"):
                     return body  # Yahoo's JSON error ("No data found"), parsed by the caller
                 raise ScanError("Yahoo answered %s for %s" % (last, path.split("?")[0]))
             except (urllib.error.URLError, OSError) as e:
                 last = str(getattr(e, "reason", e))
+                saw_retryable = True  # Network errors are retryable
                 continue
-        if attempt == 0 and saw_429:
+        if attempt == 0 and saw_retryable:
             SLEEP(BACKOFF)
             continue
         break

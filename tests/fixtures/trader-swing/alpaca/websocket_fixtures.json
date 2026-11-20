@@ -1,0 +1,23 @@
+{
+  "description": "Deterministic mock fixtures for Phase 7.2.3 Alpaca WebSocket Streaming offline testing",
+  "welcome_connected": "[{\"T\":\"success\",\"msg\":\"connected\"}]",
+  "auth_success": "[{\"T\":\"success\",\"msg\":\"authenticated\"}]",
+  "auth_failure_invalid_key": "[{\"T\":\"error\",\"code\":401,\"msg\":\"auth failed: invalid api key or secret\"}]",
+  "auth_failure_forbidden": "[{\"T\":\"error\",\"code\":403,\"msg\":\"forbidden: subscription tier does not permit requested stream feed\"}]",
+  "subscription_ack": "[{\"T\":\"subscription\",\"bars\":[\"SPY\"],\"updatedBars\":[\"SPY\"],\"trades\":[\"AAPL\"],\"quotes\":[\"QQQ\"]}]",
+  "subscription_ack_empty": "[{\"T\":\"subscription\",\"bars\":[],\"updatedBars\":[],\"trades\":[],\"quotes\":[]}]",
+  "minute_bar_spy": "[{\"T\":\"b\",\"S\":\"SPY\",\"o\":580.10,\"h\":581.50,\"l\":579.80,\"c\":580.95,\"v\":15400,\"t\":\"2026-11-17T15:30:00Z\",\"n\":320,\"vw\":580.65}]",
+  "updated_bar_spy": "[{\"T\":\"u\",\"S\":\"SPY\",\"o\":580.10,\"h\":582.10,\"l\":579.80,\"c\":581.85,\"v\":24200,\"t\":\"2026-11-17T15:30:00Z\",\"n\":480,\"vw\":580.92}]",
+  "next_minute_bar_spy": "[{\"T\":\"b\",\"S\":\"SPY\",\"o\":581.85,\"h\":582.40,\"l\":581.50,\"c\":582.10,\"v\":18300,\"t\":\"2026-11-17T15:31:00Z\",\"n\":390,\"vw\":581.95}]",
+  "trade_aapl": "[{\"T\":\"t\",\"S\":\"AAPL\",\"i\":987654,\"x\":\"V\",\"p\":228.45,\"s\":100,\"t\":\"2026-11-17T15:30:15.123456Z\",\"c\":[\"@\"],\"z\":\"C\"}]",
+  "quote_qqq": "[{\"T\":\"q\",\"S\":\"QQQ\",\"bx\":\"V\",\"bp\":492.20,\"bs\":15,\"ax\":\"V\",\"ap\":492.25,\"as\":30,\"t\":\"2026-11-17T15:30:15.123456Z\",\"c\":[\"R\"]}]",
+  "multi_message_frame": "[{\"T\":\"t\",\"S\":\"AAPL\",\"i\":1001,\"x\":\"V\",\"p\":228.50,\"s\":50,\"t\":\"2026-11-17T15:30:16.000000Z\",\"c\":[\"@\"],\"z\":\"C\"},{\"T\":\"q\",\"S\":\"QQQ\",\"bx\":\"V\",\"bp\":492.22,\"bs\":20,\"ax\":\"V\",\"ap\":492.28,\"as\":35,\"t\":\"2026-11-17T15:30:16.000000Z\",\"c\":[\"R\"]},{\"T\":\"b\",\"S\":\"SPY\",\"o\":580.10,\"h\":581.50,\"l\":579.80,\"c\":580.95,\"v\":15400,\"t\":\"2026-11-17T15:30:00Z\",\"n\":320,\"vw\":580.65}]",
+  "server_error_invalid_action": "[{\"T\":\"error\",\"code\":400,\"msg\":\"invalid action 'invalid_cmd'\"}]",
+  "server_error_rate_limited": "[{\"T\":\"error\",\"code\":429,\"msg\":\"subscription rate limit exceeded (max 30 per minute)\"}]",
+  "malformed_inverted_high_low": "[{\"T\":\"b\",\"S\":\"BAD_BAR\",\"o\":100.0,\"h\":90.0,\"l\":110.0,\"c\":95.0,\"v\":1000,\"t\":\"2026-11-17T15:30:00Z\"}]",
+  "malformed_negative_volume": "[{\"T\":\"b\",\"S\":\"BAD_VOL\",\"o\":100.0,\"h\":105.0,\"l\":95.0,\"c\":98.0,\"v\":-200,\"t\":\"2026-11-17T15:30:00Z\"}]",
+  "malformed_missing_symbol": "[{\"T\":\"b\",\"o\":100.0,\"h\":105.0,\"l\":95.0,\"c\":98.0,\"v\":1000,\"t\":\"2026-11-17T15:30:00Z\"}]",
+  "malformed_invalid_timestamp": "[{\"T\":\"b\",\"S\":\"BAD_TS\",\"o\":100.0,\"h\":105.0,\"l\":95.0,\"c\":98.0,\"v\":1000,\"t\":\"NOT_A_DATE\"}]",
+  "malformed_truncated_json": "[{\"T\":\"b\",\"S\":\"TRUNCATED\",",
+  "out_of_order_bar_spy": "[{\"T\":\"b\",\"S\":\"SPY\",\"o\":579.00,\"h\":580.00,\"l\":578.50,\"c\":579.50,\"v\":12000,\"t\":\"2026-11-17T15:20:00Z\",\"n\":210,\"vw\":579.20}]"
+}

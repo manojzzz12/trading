@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "system": "trader-swing",
+  "metadata": {
+    "created_at": "2026-11-03T00:00:00+00:00",
+    "updated_at": "2026-11-03T00:00:00+00:00",
+    "description": "Deterministic test fixture for trader-swing accounting"
+  },
+  "ledger": {
+    "initial_capital_usd": "5000.00",
+    "cash_usd": "2997.50",
+    "dividends_receivable_usd": "50.00",
+    "gross_market_value_usd": "2100.00",
+    "cumulative_realized_trading_pnl_usd": "48.50",
+    "cumulative_dividend_income_usd": "50.00",
+    "unrealized_trading_pnl_usd": "49.00",
+    "total_equity_usd": "5147.50",
+    "lot_counter": 2,
+    "dividend_counter": 1,
+    "positions": {
+      "AAPL": {
+        "ticker": "AAPL",
+        "mark_price": "210.00",
+        "total_shares": 10,
+        "total_cost_basis_usd": "2050.00",
+        "total_entry_fee_remaining_usd": "1.00",
+        "gross_market_value_usd": "2100.00",
+        "unrealized_trading_pnl_usd": "49.00",
+        "lots": [
+          {
+            "lot_id": "LOT-AAPL-0001",
+            "ticker": "AAPL",
+            "shares_initial": 10,
+            "shares_remaining": 10,
+            "entry_price": "205.00",
+            "entry_fee_initial": "1.00",
+            "entry_fee_remaining": "1.00",
+            "total_lot_cost_basis_usd": "2050.00",
+            "entry_timestamp": "2026-11-03T09:30:00-05:00",
+            "status": "OPEN"
+          }
+        ]
+      }
+    },
+    "closed_trades": [
+      {
+        "ticker": "MSFT",
+        "shares_sold": 5,
+        "exit_price": "110.00",
+        "gross_proceeds": "550.00",
+        "allocated_basis": "500.00",
+        "allocated_entry_fee": "0.50",
+        "exit_fee": "1.00",
+        "realized_net_pnl": "48.50",
+        "timestamp": "2026-11-03T10:00:00-05:00",
+        "lot_fills": []
+      }
+    ],
+    "dividends": [
+      {
+        "dividend_id": "DIV-AAPL-2026-11-04-001",
+        "ticker": "AAPL",
+        "ex_date": "2026-11-04",
+        "dividend_per_share": "5.00",
+        "eligible_shares": 10,
+        "amount_usd": "50.00",
+        "payable_date": null,
+        "status": "PENDING_PAYMENT"
+      }
+    ]
+  }
+}

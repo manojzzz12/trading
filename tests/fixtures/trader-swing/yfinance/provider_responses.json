@@ -1,0 +1,50 @@
+{
+  "description": "Deterministic mock provider responses for network-free offline test execution",
+  "valid_sample_aapl": {
+    "ticker": "AAPL",
+    "interval": "1d",
+    "bars": [
+      {"date": "2026-06-15", "open": "180.00", "high": "182.50", "low": "179.50", "close": "182.00", "adj_close": "182.00", "volume": 55000000, "splits": 0.0, "dividends": 0.0},
+      {"date": "2026-06-16", "open": "182.00", "high": "184.00", "low": "181.00", "close": "183.50", "adj_close": "183.50", "volume": 60000000, "splits": 0.0, "dividends": 0.0},
+      {"date": "2026-06-17", "open": "183.50", "high": "185.00", "low": "182.50", "close": "184.00", "adj_close": "184.00", "volume": 48000000, "splits": 0.0, "dividends": 0.0}
+    ]
+  },
+  "empty_response": {
+    "ticker": "EMPTY_SYM",
+    "interval": "1d",
+    "bars": []
+  },
+  "malformed_missing_close": {
+    "ticker": "BAD_SYM",
+    "interval": "1d",
+    "bars": [
+      {"date": "2026-06-15", "open": "180.00", "high": "182.50", "low": "179.50", "close": null, "adj_close": null, "volume": 50000000}
+    ]
+  },
+  "malformed_inverted_high_low": {
+    "ticker": "INV_SYM",
+    "interval": "1d",
+    "bars": [
+      {"date": "2026-06-15", "open": "180.00", "high": "175.00", "low": "185.00", "close": "180.00", "adj_close": "180.00", "volume": 50000000}
+    ]
+  },
+  "malformed_negative_volume": {
+    "ticker": "NEG_VOL",
+    "interval": "1d",
+    "bars": [
+      {"date": "2026-06-15", "open": "180.00", "high": "182.00", "low": "179.00", "close": "181.00", "adj_close": "181.00", "volume": -1000}
+    ]
+  },
+  "rate_limit_error": {
+    "status_code": 429,
+    "error_message": "YFException: HTTP 429 Too Many Requests: Rate limit exceeded"
+  },
+  "not_found_error": {
+    "status_code": 404,
+    "error_message": "HTTPError: 404 Client Error: Not Found for ticker DELISTED_XYZ"
+  },
+  "network_timeout_error": {
+    "error_type": "TimeoutError",
+    "error_message": "urllib.error.URLError: <urlopen error timed out after 10 seconds>"
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "description": "Deterministic mock provider responses for Alpaca Market Data API offline testing",
+  "valid_sample_spy": {
+    "bars": {
+      "SPY": [
+        {
+          "t": "2026-11-12T05:00:00Z",
+          "o": 752.10,
+          "h": 755.40,
+          "l": 750.80,
+          "c": 754.20,
+          "v": 1420500,
+          "n": 16500,
+          "vw": 753.15
+        },
+        {
+          "t": "2026-11-13T05:00:00Z",
+          "o": 754.30,
+          "h": 756.20,
+          "l": 751.50,
+          "c": 754.37,
+          "v": 1580200,
+          "n": 17820,
+          "vw": 753.95
+        },
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 745.20,
+          "h": 747.80,
+          "l": 738.50,
+          "c": 739.96,
+          "v": 1695400,
+          "n": 19450,
+          "vw": 742.15
+        }
+      ]
+    },
+    "next_page_token": null
+  },
+  "valid_sample_aapl": {
+    "bars": {
+      "AAPL": [
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 350.25,
+          "h": 353.10,
+          "l": 348.90,
+          "c": 352.78,
+          "v": 1245000,
+          "n": 15420,
+          "vw": 351.45
+        }
+      ]
+    },
+    "next_page_token": null
+  },
+  "valid_multi_ticker": {
+    "bars": {
+      "SPY": [
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 745.20,
+          "h": 747.80,
+          "l": 738.50,
+          "c": 739.96,
+          "v": 1695400,
+          "n": 19450,
+          "vw": 742.15
+        }
+      ],
+      "AAPL": [
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 350.25,
+          "h": 353.10,
+          "l": 348.90,
+          "c": 352.78,
+          "v": 1245000,
+          "n": 15420,
+          "vw": 351.45
+        }
+      ],
+      "QQQ": [
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 512.40,
+          "h": 515.00,
+          "l": 508.20,
+          "c": 510.15,
+          "v": 985000,
+          "n": 11200,
+          "vw": 511.10
+        }
+      ]
+    },
+    "next_page_token": null
+  },
+  "empty_bars": {
+    "bars": {
+      "EMPTY_SYM": []
+    },
+    "next_page_token": null
+  },
+  "no_data_response": {
+    "bars": {},
+    "next_page_token": null
+  },
+  "malformed_missing_close": {
+    "bars": {
+      "BAD_SYM": [
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 100.00,
+          "h": 105.00,
+          "l": 95.00,
+          "c": null,
+          "v": 1000
+        }
+      ]
+    },
+    "next_page_token": null
+  },
+  "malformed_inverted_high_low": {
+    "bars": {
+      "INV_SYM": [
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 100.00,
+          "h": 90.00,
+          "l": 110.00,
+          "c": 98.00,
+          "v": 1000
+        }
+      ]
+    },
+    "next_page_token": null
+  },
+  "malformed_negative_volume": {
+    "bars": {
+      "NEG_VOL": [
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 100.00,
+          "h": 105.00,
+          "l": 95.00,
+          "c": 98.00,
+          "v": -100
+        }
+      ]
+    },
+    "next_page_token": null
+  },
+  "duplicate_timestamps": {
+    "bars": {
+      "DUP_SYM": [
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 100.00,
+          "h": 105.00,
+          "l": 95.00,
+          "c": 98.00,
+          "v": 1000
+        },
+        {
+          "t": "2026-11-16T05:00:00Z",
+          "o": 100.00,
+          "h": 106.00,
+          "l": 96.00,
+          "c": 99.00,
+          "v": 1500
+        }
+      ]
+    },
+    "next_page_token": null
+  },
+  "rate_limit_error": {
+    "status_code": 429,
+    "error_message": "HTTP 429: Too Many Requests: Rate limit exceeded (200 req/min)"
+  },
+  "auth_error": {
+    "status_code": 401,
+    "error_message": "HTTP 401: Unauthorized: Invalid API Key or Secret"
+  },
+  "forbidden_error": {
+    "status_code": 403,
+    "error_message": "HTTP 403: Forbidden: Subscription does not permit requested feed"
+  },
+  "server_error": {
+    "status_code": 500,
+    "error_message": "HTTP 500: Internal Server Error from Alpaca Data Gateway"
+  }
+}

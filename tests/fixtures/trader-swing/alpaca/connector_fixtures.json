@@ -1,0 +1,190 @@
+{
+  "description": "Comprehensive mock fixtures for Phase 7.2.2 Alpaca REST connector and rate limiter offline testing",
+  "successful_bars_spy": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json",
+      "X-RateLimit-Limit": "200",
+      "X-RateLimit-Remaining": "199"
+    },
+    "body": "{\"bars\":{\"SPY\":[{\"t\":\"2026-11-12T05:00:00Z\",\"o\":752.10,\"h\":755.40,\"l\":750.80,\"c\":754.20,\"v\":1420500,\"n\":16500,\"vw\":753.15},{\"t\":\"2026-11-13T05:00:00Z\",\"o\":754.30,\"h\":756.20,\"l\":751.50,\"c\":754.37,\"v\":1580200,\"n\":17820,\"vw\":753.95},{\"t\":\"2026-11-16T05:00:00Z\",\"o\":745.20,\"h\":747.80,\"l\":738.50,\"c\":739.96,\"v\":1695400,\"n\":19450,\"vw\":742.15}]},\"next_page_token\":null}"
+  },
+  "successful_latest_bar_aapl": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"AAPL\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":350.25,\"h\":353.10,\"l\":348.90,\"c\":352.78,\"v\":1245000,\"n\":15420,\"vw\":351.45}]},\"next_page_token\":null}"
+  },
+  "successful_multi_bars": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"SPY\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":745.20,\"h\":747.80,\"l\":738.50,\"c\":739.96,\"v\":1695400,\"n\":19450,\"vw\":742.15}],\"AAPL\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":350.25,\"h\":353.10,\"l\":348.90,\"c\":352.78,\"v\":1245000,\"n\":15420,\"vw\":351.45}],\"QQQ\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":512.40,\"h\":515.00,\"l\":508.20,\"c\":510.15,\"v\":985000,\"n\":11200,\"vw\":511.10}]},\"next_page_token\":null}"
+  },
+  "empty_bars_dict": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{},\"next_page_token\":null}"
+  },
+  "empty_symbol_bars": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"EMPTY_SYM\":[]},\"next_page_token\":null}"
+  },
+  "empty_string_body": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": ""
+  },
+  "invalid_json_html": {
+    "status_code": 502,
+    "headers": {
+      "Content-Type": "text/html"
+    },
+    "body": "<html><head><title>502 Bad Gateway</title></head><body><center><h1>502 Bad Gateway</h1></center><hr><center>cloudflare</center></body></html>"
+  },
+  "invalid_json_truncated": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"SPY\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":745.20,"
+  },
+  "missing_close_field": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"BAD_SYM\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":100.00,\"h\":105.00,\"l\":95.00,\"v\":1000}]}}"
+  },
+  "missing_open_field": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"BAD_SYM\":[{\"t\":\"2026-11-16T05:00:00Z\",\"h\":105.00,\"l\":95.00,\"c\":98.00,\"v\":1000}]}}"
+  },
+  "missing_timestamp_field": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"BAD_SYM\":[{\"o\":100.00,\"h\":105.00,\"l\":95.00,\"c\":98.00,\"v\":1000}]}}"
+  },
+  "missing_volume_field": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"BAD_SYM\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":100.00,\"h\":105.00,\"l\":95.00,\"c\":98.00}]}}"
+  },
+  "http_401_unauthorized": {
+    "status_code": 401,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":40110000,\"message\":\"access key verification failed: key not found or expired\"}"
+  },
+  "http_403_forbidden": {
+    "status_code": 403,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":40310000,\"message\":\"forbidden: account subscription does not permit access to requested feed (SIP)\"}"
+  },
+  "http_404_not_found": {
+    "status_code": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":40410000,\"message\":\"endpoint or symbol not found\"}"
+  },
+  "http_400_bad_request": {
+    "status_code": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":40010000,\"message\":\"invalid timeframe parameter 'invalid_tf'\"}"
+  },
+  "http_422_unprocessable": {
+    "status_code": 422,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":42210000,\"message\":\"start date cannot be after end date\"}"
+  },
+  "http_429_with_retry_after": {
+    "status_code": 429,
+    "headers": {
+      "Content-Type": "application/json",
+      "Retry-After": "2",
+      "X-RateLimit-Limit": "200",
+      "X-RateLimit-Remaining": "0"
+    },
+    "body": "{\"code\":42910000,\"message\":\"too many requests: rate limit exceeded (200 requests/minute)\"}"
+  },
+  "http_429_no_retry_after": {
+    "status_code": 429,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":42910000,\"message\":\"too many requests: rate limit exceeded\"}"
+  },
+  "http_500_internal_error": {
+    "status_code": 500,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":50010000,\"message\":\"internal server error from Alpaca data gateway\"}"
+  },
+  "http_502_bad_gateway": {
+    "status_code": 502,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":50210000,\"message\":\"bad gateway upstream proxy error\"}"
+  },
+  "http_503_service_unavailable": {
+    "status_code": 503,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":50310000,\"message\":\"service temporarily unavailable for maintenance\"}"
+  },
+  "http_504_gateway_timeout": {
+    "status_code": 504,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"code\":50410000,\"message\":\"gateway timeout while communicating with data backend\"}"
+  },
+  "malformed_inverted_high_low": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"INV_SYM\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":100.00,\"h\":90.00,\"l\":110.00,\"c\":98.00,\"v\":1000}]}}"
+  },
+  "malformed_negative_volume": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"NEG_VOL\":[{\"t\":\"2026-11-16T05:00:00Z\",\"o\":100.00,\"h\":105.00,\"l\":95.00,\"c\":98.00,\"v\":-500}]}}"
+  },
+  "malformed_invalid_timestamp": {
+    "status_code": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"bars\":{\"BAD_TS\":[{\"t\":\"INVALID_TIMESTAMP\",\"o\":100.00,\"h\":105.00,\"l\":95.00,\"c\":98.00,\"v\":1000}]}}"
+  }
+}

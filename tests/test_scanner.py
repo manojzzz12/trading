@@ -206,6 +206,22 @@ class Network(unittest.TestCase):
         self.assertEqual(len(self.calls), 2)
         self.assertEqual(self.sleeps, [])
 
+    def test_503_retries_with_backoff(self):
+        """503 from both hosts: should retry after backoff and succeed on retry."""
+        self.answers([503, 503, 200])
+        text = scan.yahoo_get("/v7/finance/spark?symbols=TSLA&range=3mo&interval=1d")
+        self.assertEqual(text, self.body)
+        self.assertEqual(self.calls, ["https://query2.finance.yahoo.com", "https://query1.finance.yahoo.com",
+                                      "https://query2.finance.yahoo.com"])
+        self.assertEqual(self.sleeps, [scan.BACKOFF])
+
+    def test_503_from_both_hosts_eventually_fails(self):
+        """Persistent 503 from both hosts across retries should raise ScanError."""
+        self.answers([503, 503, 503, 503])
+        with self.assertRaises(scan.ScanError) as cm:
+            scan.yahoo_get("/v7/finance/spark?symbols=TSLA&range=3mo&interval=1d")
+        self.assertIn("HTTP 503", str(cm.exception))
+
     def test_429_for_good_is_reported_as_partial(self):
         self.answers([200] + [429] * 10)
         syms = ["AAPL", "TSLA", "NVDA", "BRK.B", "AMC", "ZZZZQX", "MSFT", "AMZN", "META", "GOOGL", "PLTR", "AMD",
